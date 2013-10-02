@@ -31,14 +31,17 @@ You can use service class directly:
 or you can include `CopyCarrierwaveFile` module and call `copy_carrierwave_file` :
 
 
-   class Document
-     include CopyCarrierwaveFile  
+    class Document
+      include CopyCarrierwaveFile  
 
-     def duplicate_file(original)
-       copy_carrierwave_file(original, self)
-       self.save!
-     end
-   end
+      def duplicate_file(original)
+        copy_carrierwave_file(original, self)
+        self.save!
+      end
+    end
+
+    document = Document.new
+    document.duplicate_file(Document.last) 
 
 Functionality is the same
 
