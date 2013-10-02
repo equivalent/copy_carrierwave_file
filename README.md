@@ -25,7 +25,7 @@ You can use service class directly:
     new_resource      = User.new
 
     CopyCarrierwaveFile::CopyFileService.new(original_resource, new_resource, :avatar).set_file
-   # :avatar represents mount point
+    # :avatar represents mount point
    
 
     new_resource.save
