@@ -21,10 +21,12 @@ And then execute:
 
 You can use service class directly: 
 
-    original_resource = Document.last
-    new_resource      = Document.new
+    original_resource = User.last
+    new_resource      = User.new
 
-    CopyCarrierwaveFile::CopyFileService.new(original_resource, new_resource).set_file
+    CopyCarrierwaveFile::CopyFileService.new(original_resource, new_resource, :avatar).set_file
+   # :avatar represents mount point
+   
 
     new_resource.save
 
@@ -35,7 +37,7 @@ or you can include `CopyCarrierwaveFile` module and call `copy_carrierwave_file`
       include CopyCarrierwaveFile  
 
       def duplicate_file(original)
-        copy_carrierwave_file(original, self)
+        copy_carrierwave_file(original, self, :content_file)
         self.save!
       end
     end

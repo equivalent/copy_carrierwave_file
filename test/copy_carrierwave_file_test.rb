@@ -9,8 +9,8 @@ describe 'CopyCarrierwaveFile', 'included module' do
     file_service_object = mock()
     file_service_object.expects(:set_file).at_least_once.returns(true)
 
-    CopyCarrierwaveFile::CopyFileService.expects(:new).with('one', 'two').returns(file_service_object)
-    Document.new.copy_carrierwave_file('one','two')
+    CopyCarrierwaveFile::CopyFileService.expects(:new).with('one', 'two', :file).returns(file_service_object)
+    Document.new.copy_carrierwave_file('one','two', :file)
   end
   
 end

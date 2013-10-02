@@ -1,14 +1,21 @@
 module CopyCarrierwaveFile
   class CopyFileService
-    attr_reader :original_document, :document
+    attr_reader :original_resource, :resource, :mount_point
 
-    def initialize(original_document, document)
-      raise "Original document must be Document" unless original_document.is_a? Document
-      @original_document = original_document
-      @document          = document
+    def initialize(original_resource, resource, mount_point)
+      @mount_point       = mount_point.to_sym
+
+      raise "#{original_resource} is not a resource with uploader" unless original_resource.class.respond_to? :uploaders
+      raise "#{original_resource} doesn't have mount point #{mount_point}" unless original_resource.class.uploaders[@mount_point]
+
+      raise "#{resource} is not a resource with uploader" unless resource.class.respond_to? :uploaders
+      raise "#{resource} doesn't have mount point #{mount_point}" unless resource.class.uploaders[@mount_point]
+
+      @original_resource = original_resource
+      @resource          = resource
     end
 
-    # Set file from original document
+    # Set file from original resource
     #
     # Founded originally at http://bit.ly/ROGtPR
     #
@@ -19,15 +26,15 @@ module CopyCarrierwaveFile
         rescue Errno::ENOENT
           set_file_for_local_storage
         rescue NoMethodError
-          raise "Original document has no File"
+          raise "Original resource has no File"
         end
       else
-        raise "Original document has no File"
+        raise "Original resource has no File"
       end
     end
 
     def have_file?
-      original_document.file.url.present?
+      original_resource.file.url.present?
     end
 
     # Set file when you use remote storage for your files (like S3)
@@ -39,18 +46,22 @@ module CopyCarrierwaveFile
     #
     # If you have issues with code try alternative code:
     #
-    #    document.remote_file_url = original_document.file.url
+    #    resource.remote_file_url = original_resource.file.url
     #
     def set_file_for_remote_storage
-       self.document_file = open(original_document.file.url)
+      set_resource_mounter_file open(original_resource_mounter.url)
     end
 
     def set_file_for_local_storage
-      self.document_file = File.open(original_document.file.file.file)
+      set_resource_mounter_file File.open(original_resource_mounter.file.file)
     end
 
-    def document_file=(file)
-      document.send( :"file=", file)
+    def original_resource_mounter
+      original_resource.send(mount_point)
+    end
+
+    def set_resource_mounter_file(file)
+      resource.send( :"#{mount_point.to_s}=", file)
     end
 
   end

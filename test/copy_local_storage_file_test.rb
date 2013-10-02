@@ -8,7 +8,7 @@ describe 'CopyCarrierwaveFile', 'copying local storage file' do
   end
 
   let(:document)    { Document.new }
-  let(:copy_service){ CopyCarrierwaveFile::CopyFileService.new(original_document, document)}
+  let(:copy_service){ CopyCarrierwaveFile::CopyFileService.new(original_document, document, :file)}
   let(:original_document) do
     doc = Document.new
     doc.file = test_file1

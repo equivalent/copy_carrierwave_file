@@ -4,7 +4,7 @@ describe CopyCarrierwaveFile::CopyFileService, 'copying remote storage file' do
   include UploadedFileMacros
 
   let(:document)    { Document.new }
-  let(:copy_service){ CopyCarrierwaveFile::CopyFileService.new(original_document, document)}
+  let(:copy_service){ CopyCarrierwaveFile::CopyFileService.new(original_document, document, :file)}
   let(:original_document){ Document.create }
 
   after(:all){ remove_uploaded_test_files }
