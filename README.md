@@ -33,6 +33,7 @@ or you can include `CopyCarrierwaveFile` module and call `copy_carrierwave_file`
 
     class Document
       include CopyCarrierwaveFile  
+      mount_uplader :file, MyUploader
 
       def duplicate_file(original)
         copy_carrierwave_file(original, self)
