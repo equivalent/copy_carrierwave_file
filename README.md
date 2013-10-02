@@ -19,12 +19,28 @@ And then execute:
 
 ## Usage
 
+You can use service class directly: 
+
     original_resource = Document.last
     new_resource      = Document.new
 
-    CopyCarrierwaveFile::CopyFileService.new(original_resource, new_resource)
+    CopyCarrierwaveFile::CopyFileService.new(original_resource, new_resource).set_file
+
     new_resource.save
 
+or you can include `CopyCarrierwaveFile` module and call `copy_carrierwave_file` :
+
+
+   class Document
+     include CopyCarrierwaveFile  
+
+     def duplicate_file(original)
+       copy_carrierwave_file(original, self)
+       self.save!
+     end
+   end
+
+Functionality is the same
 
 ## Contributing
 
