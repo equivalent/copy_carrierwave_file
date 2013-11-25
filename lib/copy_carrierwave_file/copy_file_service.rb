@@ -34,7 +34,7 @@ module CopyCarrierwaveFile
     end
 
     def have_file?
-      original_resource_mounter.url.present?
+      original_resource_mounter.file.present?
     end
 
     # Set file when you use remote storage for your files (like S3)
