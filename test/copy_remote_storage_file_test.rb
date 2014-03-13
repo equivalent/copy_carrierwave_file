@@ -14,6 +14,7 @@ describe CopyCarrierwaveFile::CopyFileService, 'copying remote storage file' do
 
   it 'Document file must be identical to Original document file' do
     mock_file = mock()
+    mock_file.expects(:file).at_least_once.returns('a_file_mock')
     mock_file.expects(:url).at_least_once.returns('http://foo')
 
     original_document.stubs(:file).returns(mock_file)
