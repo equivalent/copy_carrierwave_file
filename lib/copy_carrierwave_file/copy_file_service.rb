@@ -20,13 +20,25 @@ module CopyCarrierwaveFile
     # Founded originally at http://bit.ly/ROGtPR
     #
     def set_file
+      #if have_file?
+        #begin
+        #rescue Errno::ENOENT
+          #set_file_for_local_storage
+        #rescue NoMethodError
+          #raise "Original resource has no File"
+        #end
+      #else
+        #raise "Original resource has no File"
+      #end
+
       if have_file?
-        begin
-          set_file_for_remote_storage
-        rescue Errno::ENOENT
+        case original_resource_mounter.send(:storage).class.name
+        when 'CarrierWave::Storage::File'
           set_file_for_local_storage
-        rescue NoMethodError
-          raise "Original resource has no File"
+        when 'CarrierWave::Storage::Fog'
+          set_file_for_remote_storage
+        else
+          raise 'Unknown storage type for original resource'
         end
       else
         raise "Original resource has no File"
