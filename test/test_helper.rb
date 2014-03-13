@@ -1,7 +1,7 @@
 require 'bundler/setup'
 require 'copy_carrierwave_file'
 require 'minitest/autorun'
-require 'mocha'
+require 'mocha/setup'
 require 'active_record'
 require 'carrierwave'
 require 'carrierwave/orm/activerecord'

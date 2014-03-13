@@ -10,7 +10,7 @@ It's solving issues with local and remote storage discussed
 
 Add this line to your application's Gemfile:
 
-    gem 'copy_carrierwave_file', github: 'equivalent/copy_carrierwave_file'
+    gem 'copy_carrierwave_file'
 
 And then execute:
 
@@ -25,7 +25,7 @@ You can use service class directly:
     new_resource      = User.new
 
     CopyCarrierwaveFile::CopyFileService.new(original_resource, new_resource, :avatar).set_file
-      # :avatar represents mount point
+      # :avatar represents mount point (field)
    
     new_resource.save
 
