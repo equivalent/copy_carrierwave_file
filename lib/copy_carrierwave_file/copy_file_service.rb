@@ -49,31 +49,16 @@ module CopyCarrierwaveFile
       original_resource_mounter.file.present?
     end
 
-    # Set file when you use remote storage for your files (like S3)
-    #
-    # will try to fetch full remote path of a file with `open-uri`
-    #
-    # If you use local storage, `doc.avatar.url` will return relative path, therefor
-    # this will fail with Errno::ENOENT
-    #
-    # If you have issues with code try alternative code:
-    #
-    #    resource.remote_file_url = original_resource.avatar.url
-    #
     def set_file_for_remote_storage
-      set_resource_mounter_file open(original_resource_mounter.url)
+      resource.send( :"remote_#{mount_point.to_s}_url=", original_resource_mounter.url)
     end
 
     def set_file_for_local_storage
-      set_resource_mounter_file File.open(original_resource_mounter.file.file)
+      resource.send( :"#{mount_point.to_s}=", File.open(original_resource_mounter.file.file))
     end
 
     def original_resource_mounter
       original_resource.send(mount_point)
-    end
-
-    def set_resource_mounter_file(file)
-      resource.send( :"#{mount_point.to_s}=", file)
     end
 
   end
