@@ -3,7 +3,7 @@ module CopyCarrierwaveFile
     attr_reader :original_resource, :resource, :original_mount_point, :resource_mount_point
 
     def initialize(original_resource, resource, original_mount_point, resource_mount_point = nil)
-      @original_mount_point       = mount_point.to_sym
+      @original_mount_point       = original_mount_point.to_sym
       @resource_mount_point       = resource_mount_point || @original_mount_point
 
       raise "#{original_resource} is not a resource with uploader" unless original_resource.class.respond_to? :uploaders
