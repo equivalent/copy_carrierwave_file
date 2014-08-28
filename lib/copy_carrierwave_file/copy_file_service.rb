@@ -1,15 +1,16 @@
 module CopyCarrierwaveFile
   class CopyFileService
-    attr_reader :original_resource, :resource, :mount_point
+    attr_reader :original_resource, :resource, :original_mount_point, :resource_mount_point
 
-    def initialize(original_resource, resource, mount_point)
-      @mount_point       = mount_point.to_sym
+    def initialize(original_resource, resource, original_mount_point, resource_mount_point = nil)
+      @original_mount_point       = mount_point.to_sym
+      @resource_mount_point       = resource_mount_point || @original_mount_point
 
       raise "#{original_resource} is not a resource with uploader" unless original_resource.class.respond_to? :uploaders
-      raise "#{original_resource} doesn't have mount point #{mount_point}" unless original_resource.class.uploaders[@mount_point]
+      raise "#{original_resource} doesn't have mount point #{mount_point}" unless original_resource.class.uploaders[@original_mount_point]
 
       raise "#{resource} is not a resource with uploader" unless resource.class.respond_to? :uploaders
-      raise "#{resource} doesn't have mount point #{mount_point}" unless resource.class.uploaders[@mount_point]
+      raise "#{resource} doesn't have mount point #{mount_point}" unless resource.class.uploaders[@resource_mount_point]
 
       @original_resource = original_resource
       @resource          = resource
@@ -57,11 +58,11 @@ module CopyCarrierwaveFile
     end
 
     def original_resource_mounter
-      original_resource.send(mount_point)
+      original_resource.send(original_mount_point)
     end
 
     def set_resource_mounter_file(file)
-      resource.send( :"#{mount_point.to_s}=", file)
+      resource.send( :"#{resource_mount_point.to_s}=", file)
     end
 
   end
