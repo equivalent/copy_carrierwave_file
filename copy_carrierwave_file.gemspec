@@ -25,4 +25,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "minitest", "~> 5"
   spec.add_development_dependency "mocha", "~> 0.14"
   spec.add_development_dependency "sqlite3"
+  spec.add_development_dependency "fog"
+  spec.add_development_dependency "pry"
 end

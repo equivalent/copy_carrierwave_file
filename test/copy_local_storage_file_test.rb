@@ -7,10 +7,10 @@ describe 'CopyCarrierwaveFile', 'copying local storage file' do
     FileUtils.rm_rf(Dir.glob(TEST_DIR+"/tmp/uploads/*"))
   end
 
-  let(:document)    { Document.new }
+  let(:document)    { LocalDocument.new }
   let(:copy_service){ CopyCarrierwaveFile::CopyFileService.new(original_document, document, :file)}
   let(:original_document) do
-    doc = Document.new
+    doc = LocalDocument.new
     doc.file = test_file1
     doc.save
     doc

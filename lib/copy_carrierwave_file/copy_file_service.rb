@@ -1,5 +1,8 @@
 module CopyCarrierwaveFile
   class CopyFileService
+    NoFileForOriginalResource = Class.new(StandardError)
+    UnknowStorage             = Class.new(StandardError)
+
     attr_reader :original_resource, :resource, :mount_point
 
     def initialize(original_resource, resource, mount_point)
@@ -15,22 +18,15 @@ module CopyCarrierwaveFile
       @resource          = resource
     end
 
-    # Set file from original resource
+    # #set_file
     #
-    # Founded originally at http://bit.ly/ROGtPR
+    # sets file for given storage type
+    #
+    # reason why case is comparing String and not actual storage class
+    # is that user may or may not add gem "fog" => this class may not be
+    # loaded
     #
     def set_file
-      #if have_file?
-        #begin
-        #rescue Errno::ENOENT
-          #set_file_for_local_storage
-        #rescue NoMethodError
-          #raise "Original resource has no File"
-        #end
-      #else
-        #raise "Original resource has no File"
-      #end
-
       if have_file?
         case original_resource_mounter.send(:storage).class.name
         when 'CarrierWave::Storage::File'
@@ -38,10 +34,10 @@ module CopyCarrierwaveFile
         when 'CarrierWave::Storage::Fog'
           set_file_for_remote_storage
         else
-          raise 'Unknown storage type for original resource'
+          raise UnknowStorage
         end
       else
-        raise "Original resource has no File"
+        raise NoFileForOriginalResource
       end
     end
 
@@ -50,11 +46,11 @@ module CopyCarrierwaveFile
     end
 
     def set_file_for_remote_storage
-      resource.send( :"remote_#{mount_point.to_s}_url=", original_resource_mounter.url)
+      resource.send(:"remote_#{mount_point.to_s}_url=", original_resource_mounter.url)
     end
 
     def set_file_for_local_storage
-      resource.send( :"#{mount_point.to_s}=", File.open(original_resource_mounter.file.file))
+      resource.send(:"#{mount_point.to_s}=", File.open(original_resource_mounter.file.file))
     end
 
     def original_resource_mounter
