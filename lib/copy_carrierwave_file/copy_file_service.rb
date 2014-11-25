@@ -1,5 +1,8 @@
 module CopyCarrierwaveFile
   class CopyFileService
+    NoFileForOriginalResource = Class.new(StandardError)
+    UnknowStorage             = Class.new(StandardError)
+
     attr_reader :original_resource, :resource, :mount_point
 
     def initialize(original_resource, resource, mount_point)
@@ -15,21 +18,26 @@ module CopyCarrierwaveFile
       @resource          = resource
     end
 
-    # Set file from original resource
+    # #set_file
     #
-    # Founded originally at http://bit.ly/ROGtPR
+    # sets file for given storage type
+    #
+    # reason why case is comparing String and not actual storage class
+    # is that user may or may not add gem "fog" => this class may not be
+    # loaded
     #
     def set_file
       if have_file?
-        begin
-          set_file_for_remote_storage
-        rescue Errno::ENOENT
+        case original_resource_mounter.send(:storage).class.name
+        when 'CarrierWave::Storage::File'
           set_file_for_local_storage
-        rescue NoMethodError
-          raise "Original resource has no File"
+        when 'CarrierWave::Storage::Fog'
+          set_file_for_remote_storage
+        else
+          raise UnknowStorage
         end
       else
-        raise "Original resource has no File"
+        raise NoFileForOriginalResource
       end
     end
 
@@ -37,31 +45,16 @@ module CopyCarrierwaveFile
       original_resource_mounter.file.present?
     end
 
-    # Set file when you use remote storage for your files (like S3)
-    #
-    # will try to fetch full remote path of a file with `open-uri`
-    #
-    # If you use local storage, `doc.avatar.url` will return relative path, therefor
-    # this will fail with Errno::ENOENT
-    #
-    # If you have issues with code try alternative code:
-    #
-    #    resource.remote_file_url = original_resource.avatar.url
-    #
     def set_file_for_remote_storage
-      set_resource_mounter_file open(original_resource_mounter.url)
+      resource.send(:"remote_#{mount_point.to_s}_url=", original_resource_mounter.url)
     end
 
     def set_file_for_local_storage
-      set_resource_mounter_file File.open(original_resource_mounter.file.file)
+      resource.send(:"#{mount_point.to_s}=", File.open(original_resource_mounter.file.file))
     end
 
     def original_resource_mounter
       original_resource.send(mount_point)
-    end
-
-    def set_resource_mounter_file(file)
-      resource.send( :"#{mount_point.to_s}=", file)
     end
 
   end

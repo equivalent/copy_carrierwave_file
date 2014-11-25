@@ -16,11 +16,12 @@ class Minitest::Spec
   end
 end
 
+Fog.mock!
+
 ActiveRecord::Base::establish_connection(adapter: 'sqlite3', database: ':memory:')
 ActiveRecord::Base.connection.execute(%{CREATE TABLE documents (id INTEGER PRIMARY KEY, file STRING );})
 
-
-class FileUploader < CarrierWave::Uploader::Base
+class LocalFileUploader < CarrierWave::Uploader::Base
   storage :file
 
   def root
@@ -28,13 +29,25 @@ class FileUploader < CarrierWave::Uploader::Base
   end
 end
 
+class RemoteFileUploader < CarrierWave::Uploader::Base
+  storage :fog
+
+  def root
+    "#{TEST_DIR}/tmp/" # 
+  end
+end
 
 class Document < ActiveRecord::Base
-  mount_uploader :file, FileUploader
+end
+
+class LocalDocument < Document
+  mount_uploader :file, LocalFileUploader
+end
+
+class RemoteDocument < Document
+  mount_uploader :file, RemoteFileUploader
 end
 
 def remove_uploaded_test_files
   FileUtils.rm_rf(Dir.glob(TEST_DIR+"/tmp/uploads/*"))
 end
-
-

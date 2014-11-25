@@ -1,28 +1,29 @@
 require 'test_helper'
+  require 'pry'
 
 describe CopyCarrierwaveFile::CopyFileService, 'copying remote storage file' do
   include UploadedFileMacros
 
-  let(:document)    { Document.new }
-  let(:copy_service){ CopyCarrierwaveFile::CopyFileService.new(original_document, document, :file)}
-  let(:original_document){ Document.create }
+  let(:document) { RemoteDocument.new }
+  let(:original_document) { RemoteDocument.create }
 
   after(:all){ remove_uploaded_test_files }
 
-  subject{ FileUtils.identical?(test_file1, document.file.file.file) }
-
-
   it 'Document file must be identical to Original document file' do
-    mock_file = mock()
-    mock_file.expects(:file).at_least_once.returns('a_file_mock')
-    mock_file.expects(:url).at_least_once.returns('http://foo')
 
-    original_document.stubs(:file).returns(mock_file)
-    CopyCarrierwaveFile::CopyFileService.any_instance.expects(:open).with('http://foo').returns(test_file1)
+    # set any file on original_document so that copy can start
+    original_document.remote_file_url = 'http://mock.com/test.jpg'
 
-    copy_service.set_file
-    document.save
+    # because we do Fog.mock! storage acts now as local, we return some url
+    original_document
+      .file
+      .stubs(:url)
+      .returns('http://mock.com/test.jpg')
 
-    subject.must_equal true
+    CopyCarrierwaveFile::CopyFileService
+      .new(original_document, document, :file)
+      .set_file
+
+    document.file.file.must_be_kind_of CarrierWave::SanitizedFile
   end
 end
