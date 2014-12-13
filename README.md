@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/equivalent/copy_carrierwave_file.svg?branch=master)](https://travis-ci.org/equivalent/copy_carrierwave_file)
 [![Code Climate](https://codeclimate.com/github/equivalent/copy_carrierwave_file/badges/gpa.svg)](https://codeclimate.com/github/equivalent/copy_carrierwave_file)
+[![Coverage
+Status](https://coveralls.io/repos/equivalent/copy_carrierwave_file/badge.png)](https://coveralls.io/r/equivalent/copy_carrierwave_file)
 
 # CopyCarrierwaveFile
 

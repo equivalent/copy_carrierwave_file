@@ -5,6 +5,8 @@ require 'mocha/setup'
 require 'active_record'
 require 'carrierwave'
 require 'carrierwave/orm/activerecord'
+require 'coveralls'
+Coveralls.wear! # test coverage
 
 TEST_DIR = File.dirname(__FILE__)
 #require './test/support/upload_file_macros.rb'
