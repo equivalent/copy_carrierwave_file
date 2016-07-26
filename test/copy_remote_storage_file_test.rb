@@ -3,8 +3,13 @@ require 'test_helper'
 
 describe CopyCarrierwaveFile::CopyFileService, 'copying remote storage file' do
   include UploadedFileMacros
+  class MockRemoteDocument < Minitest::Mock
+    def self.uploaders
+      RemoteDocument.uploaders
+    end
+  end
 
-  let(:document) { RemoteDocument.new }
+  let(:document) { MockRemoteDocument.new }
   let(:original_document) { RemoteDocument.create }
 
   after(:all){ remove_uploaded_test_files }
@@ -20,10 +25,12 @@ describe CopyCarrierwaveFile::CopyFileService, 'copying remote storage file' do
       .stubs(:url)
       .returns('http://mock.com/test.jpg')
 
+    document.expect(:remote_file_url=, true, ["http://mock.com/test.jpg"])
+
     CopyCarrierwaveFile::CopyFileService
       .new(original_document, document, :file)
       .set_file
 
-    document.file.file.must_be_kind_of CarrierWave::SanitizedFile
+    document.verify
   end
 end

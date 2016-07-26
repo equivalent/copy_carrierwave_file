@@ -42,7 +42,7 @@ module CopyCarrierwaveFile
     end
 
     def have_file?
-      original_resource_mounter.file.present?
+      original_resource_mounter.file.present? || original_resource_mounter.url
     end
 
     def set_file_for_remote_storage
