@@ -2,6 +2,7 @@
 [![Code Climate](https://codeclimate.com/github/equivalent/copy_carrierwave_file/badges/gpa.svg)](https://codeclimate.com/github/equivalent/copy_carrierwave_file)
 [![Coverage
 Status](https://coveralls.io/repos/equivalent/copy_carrierwave_file/badge.png)](https://coveralls.io/r/equivalent/copy_carrierwave_file)
+![Gittens](http://gittens.r15.railsrumble.com//badge/equivalent/copy_carrierwave_file)
 [![Open Thanks](https://thawing-falls-79026.herokuapp.com/images/thanks-1.svg)](https://thawing-falls-79026.herokuapp.com/r/zrhkfsxi)
 
 # CopyCarrierwaveFile
